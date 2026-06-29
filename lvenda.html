@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lvenda — Lưu Ngọc Linh</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Dancing+Script:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #0a0a18;
+    --deep: #0f0f22;
+    --surface: #13132a;
+    --card: #1a1a35;
+    --lavender: #b8a9d9;
+    --ice: #a8c4e0;
+    --glow: #8b7fc8;
+    --soft: #e4dff5;
+    --muted: #7a7a9a;
+    --accent: #c4b5f4;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--soft);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ── DANDELION CANVAS ── */
+  #dandelion-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.45;
+  }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    z-index: 1;
+    padding: 2rem;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(139,127,200,0.18) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    animation: breathe 6s ease-in-out infinite;
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+    50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    color: var(--lavender);
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+    opacity: 0.7;
+  }
+
+  .hero-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 10vw, 7rem);
+    font-weight: 300;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--soft);
+    margin-bottom: 0.3rem;
+  }
+
+  .hero-name span {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-nickname {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.4rem, 4vw, 2.2rem);
+    color: var(--lavender);
+    margin-bottom: 1.5rem;
+    opacity: 0.85;
+  }
+
+  .hero-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 2.5vw, 1.35rem);
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    margin-bottom: 3rem;
+  }
+
+  .hero-pills {
+    display: flex;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .pill {
+    border: 1px solid rgba(184,169,217,0.3);
+    border-radius: 100px;
+    padding: 0.35rem 1rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--lavender);
+    background: rgba(184,169,217,0.06);
+    backdrop-filter: blur(4px);
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--muted);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    animation: fadeInUp 1.5s 1s both;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--glow), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.2); }
+  }
+
+  /* ── SECTIONS ── */
+  .section {
+    position: relative;
+    z-index: 1;
+    padding: 6rem 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .section-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--glow);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .section-label::after {
+    content: '';
+    display: block;
+    height: 1px;
+    width: 3rem;
+    background: linear-gradient(to right, var(--glow), transparent);
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--soft);
+    margin-bottom: 2rem;
+  }
+
+  .section-title em {
+    color: var(--accent);
+    font-style: italic;
+  }
+
+  /* ── ABOUT ── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+
+  @media (max-width: 600px) {
+    .about-grid { grid-template-columns: 1fr; }
+  }
+
+  .about-card {
+    background: var(--card);
+    border: 1px solid rgba(184,169,217,0.12);
+    border-radius: 16px;
+    padding: 1.5rem;
+    backdrop-filter: blur(8px);
+  }
+
+  .about-card-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--glow);
+    margin-bottom: 0.5rem;
+  }
+
+  .about-card-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    color: var(--soft);
+  }
+
+  .about-body {
+    font-size: 0.95rem;
+    line-height: 1.9;
+    color: rgba(228,223,245,0.75);
+    margin-top: 2rem;
+  }
+
+  .about-body p + p { margin-top: 1rem; }
+
+  /* ── VIBES ── */
+  .vibe-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+  }
+
+  .vibe-tag {
+    background: rgba(139,127,200,0.12);
+    border: 1px solid rgba(139,127,200,0.25);
+    border-radius: 8px;
+    padding: 0.5rem 1.1rem;
+    font-size: 0.82rem;
+    color: var(--accent);
+  }
+
+  /* ── HOBBIES ── */
+  .hobby-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.2rem;
+    margin-top: 2rem;
+  }
+
+  .hobby-item {
+    background: var(--card);
+    border: 1px solid rgba(184,169,217,0.1);
+    border-radius: 14px;
+    padding: 1.4rem;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+
+  .hobby-item:hover {
+    border-color: rgba(196,181,244,0.35);
+    transform: translateY(-3px);
+  }
+
+  .hobby-icon {
+    font-size: 1.6rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .hobby-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    color: var(--soft);
+    margin-bottom: 0.35rem;
+  }
+
+  .hobby-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* ── SKILLS ── */
+  .skills-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    margin-top: 2rem;
+  }
+
+  .skill-row {
+    display: grid;
+    grid-template-columns: 120px 1fr 40px;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .skill-name {
+    font-size: 0.8rem;
+    color: var(--lavender);
+    letter-spacing: 0.05em;
+  }
+
+  .skill-bar-bg {
+    height: 4px;
+    background: rgba(184,169,217,0.12);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+
+  .skill-bar-fill {
+    height: 100%;
+    background: linear-gradient(to right, var(--glow), var(--accent));
+    border-radius: 100px;
+    width: 0;
+    transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .skill-val {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  /* ── CONTACT ── */
+  .contact-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    background: var(--card);
+    border: 1px solid rgba(184,169,217,0.14);
+    border-radius: 12px;
+    padding: 0.9rem 1.4rem;
+    text-decoration: none;
+    color: var(--lavender);
+    font-size: 0.85rem;
+    transition: border-color 0.3s, color 0.3s, transform 0.3s;
+  }
+
+  .contact-link:hover {
+    border-color: var(--accent);
+    color: var(--soft);
+    transform: translateY(-2px);
+  }
+
+  .contact-icon { font-size: 1.1rem; }
+
+  .contact-note {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 1.2rem;
+    font-style: italic;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 3rem 2rem 4rem;
+    border-top: 1px solid rgba(184,169,217,0.08);
+    color: var(--muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+  }
+
+  footer .footer-name {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.4rem;
+    color: var(--lavender);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(184,169,217,0.2), transparent);
+    margin: 1rem 0 2rem;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-eyebrow { animation: fadeInUp 0.8s 0.2s both; }
+  .hero-name { animation: fadeInUp 0.8s 0.4s both; }
+  .hero-nickname { animation: fadeInUp 0.8s 0.55s both; }
+  .hero-tagline { animation: fadeInUp 0.8s 0.7s both; }
+  .hero-pills { animation: fadeInUp 0.8s 0.85s both; }
+
+  /* ── BISEXUAL FLAG SUBTLE ── */
+  .bi-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #d60270, #9b4f96, #0038a8);
+    vertical-align: middle;
+    margin-left: 4px;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="dandelion-canvas"></canvas>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <p class="hero-eyebrow">Welcome to my little corner</p>
+  <h1 class="hero-name">Lưu Ngọc <span>Linh</span></h1>
+  <p class="hero-nickname">Lvenda</p>
+  <p class="hero-tagline">Just want to sleep...</p>
+  <div class="hero-pills">
+    <span class="pill">✦ Libra</span>
+    <span class="pill">18 · 10 · 2006</span>
+    <span class="pill">Introvert</span>
+    <span class="pill">Bisexual</span>
+    <span class="pill">5'1" · 45kg</span>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+  <p class="section-label">About me</p>
+  <h2 class="section-title">Who is <em>Lvenda</em>?</h2>
+  <div class="about-grid">
+    <div class="about-card">
+      <p class="about-card-label">Full name</p>
+      <p class="about-card-value">Lưu Ngọc Linh</p>
+    </div>
+    <div class="about-card">
+      <p class="about-card-label">Birthday</p>
+      <p class="about-card-value">October 18, 2006</p>
+    </div>
+    <div class="about-card">
+      <p class="about-card-label">Zodiac</p>
+      <p class="about-card-value">♎ Libra</p>
+    </div>
+    <div class="about-card">
+      <p class="about-card-label">Identity</p>
+      <p class="about-card-value">Bisexual <span class="bi-dot"></span></p>
+    </div>
+  </div>
+  <div class="about-body">
+    <p>I'm a quiet soul who mostly lives inside my own head. Social situations make me anxious, and I tend to fumble over my words when I have to speak — but that's okay, writing feels more like home anyway.</p>
+    <p>On most days I'm soft and gentle, the kind of person who sits in the background and watches the world go by. But when stress finds me, something shifts — I become sharp, chaotic, a little unhinged in the best and worst ways. I cycle through moods I can't always explain: one moment I want distance from everyone, the next I'm perfectly fine again. That's just how I work.</p>
+    <p>My vibe, at its core, is quiet peace — dandelions drifting, soft blue hours, the kind of calm that doesn't need to announce itself.</p>
+  </div>
+  <div class="vibe-tags">
+    <span class="vibe-tag">🌿 soft & quiet</span>
+    <span class="vibe-tag">🌙 night owl</span>
+    <span class="vibe-tag">🦋 gentle chaos</span>
+    <span class="vibe-tag">💤 sleepy</span>
+    <span class="vibe-tag">🌸 emotionally complex</span>
+    <span class="vibe-tag">✦ introverted</span>
+  </div>
+</section>
+
+<div class="divider" style="max-width:900px;margin:0 auto;position:relative;z-index:1;"></div>
+
+<!-- HOBBIES -->
+<section class="section" id="hobbies">
+  <p class="section-label">What I love</p>
+  <h2 class="section-title">Hobbies &<em> Things</em></h2>
+  <div class="hobby-list">
+    <div class="hobby-item">
+      <div class="hobby-icon">🎵</div>
+      <div class="hobby-name">Music</div>
+      <div class="hobby-desc">All genres, all moods. From Katy Perry's <em>E.T.</em> to whatever's playing at 3am — if it hits, it stays.</div>
+    </div>
+    <div class="hobby-item">
+      <div class="hobby-icon">🎮</div>
+      <div class="hobby-name">Gaming</div>
+      <div class="hobby-desc">Roblox, Valorant, Liên Quân, Wuthering Waves. I play to escape, and I play to win.</div>
+    </div>
+    <div class="hobby-item">
+      <div class="hobby-icon">🌼</div>
+      <div class="hobby-name">Flowers</div>
+      <div class="hobby-desc">Especially dandelions. There's something about watching seeds drift away that feels like a quiet kind of freedom.</div>
+    </div>
+    <div class="hobby-item">
+      <div class="hobby-icon">🎨</div>
+      <div class="hobby-name">Drawing</div>
+      <div class="hobby-desc">My sketchbook holds all the things I can't say out loud. Art is where I feel most like myself.</div>
+    </div>
+    <div class="hobby-item">
+      <div class="hobby-icon">🎤</div>
+      <div class="hobby-name">Singing</div>
+      <div class="hobby-desc">Quietly, alone, at full volume when no one's listening. It's my secret form of expression.</div>
+    </div>
+    <div class="hobby-item">
+      <div class="hobby-icon">💤</div>
+      <div class="hobby-name">Sleeping</div>
+      <div class="hobby-desc">A certified professional. My greatest skill, my most devoted practice. Do not disturb.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider" style="max-width:900px;margin:0 auto;position:relative;z-index:1;"></div>
+
+<!-- SKILLS -->
+<section class="section" id="skills">
+  <p class="section-label">Skills</p>
+  <h2 class="section-title">What I can <em>do</em></h2>
+  <div class="skills-list" id="skills-list">
+    <div class="skill-row">
+      <span class="skill-name">Drawing</span>
+      <div class="skill-bar-bg"><div class="skill-bar-fill" data-val="90"></div></div>
+      <span class="skill-val">90</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">Singing</span>
+      <div class="skill-bar-bg"><div class="skill-bar-fill" data-val="80"></div></div>
+      <span class="skill-val">80</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">Design</span>
+      <div class="skill-bar-bg"><div class="skill-bar-fill" data-val="70"></div></div>
+      <span class="skill-val">70</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">Gaming</span>
+      <div class="skill-bar-bg"><div class="skill-bar-fill" data-val="100"></div></div>
+      <span class="skill-val">100</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">Sleeping</span>
+      <div class="skill-bar-bg"><div class="skill-bar-fill" data-val="100"></div></div>
+      <span class="skill-val">100</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider" style="max-width:900px;margin:0 auto;position:relative;z-index:1;"></div>
+
+<!-- CONTACT -->
+<section class="section" id="contact">
+  <p class="section-label">Find me</p>
+  <h2 class="section-title">Let's <em>connect</em></h2>
+  <p style="color:var(--muted);font-size:0.88rem;margin-top:-0.5rem;">I don't bite. (Probably.)</p>
+  <div class="contact-links">
+    <a class="contact-link" href="https://discord.com/users/_lvenda" target="_blank">
+      <span class="contact-icon">💬</span>
+      <span>Discord — <strong>_lvenda</strong></span>
+    </a>
+    <a class="contact-link" href="#">
+      <span class="contact-icon">✉️</span>
+      <span>Email — <em>updating soon</em></span>
+    </a>
+    <a class="contact-link" href="#">
+      <span class="contact-icon">𝕏</span>
+      <span>Twitter — <em>updating soon</em></span>
+    </a>
+    <a class="contact-link" href="#">
+      <span class="contact-icon">📸</span>
+      <span>Instagram — <em>updating soon</em></span>
+    </a>
+    <a class="contact-link" href="#">
+      <span class="contact-icon">🔵</span>
+      <span>Facebook — <em>updating soon</em></span>
+    </a>
+  </div>
+  <p class="contact-note">* Links marked "updating soon" will be live once I decide to exist online more officially.</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-name">Lvenda</span>
+  Lưu Ngọc Linh · 2006 · Libra ♎
+</footer>
+
+<script>
+// ── DANDELION CANVAS ──
+const canvas = document.getElementById('dandelion-canvas');
+const ctx = canvas.getContext('2d');
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+class Seed {
+  constructor() { this.reset(true); }
+
+  reset(randomY = false) {
+    this.x = Math.random() * canvas.width;
+    this.y = randomY ? Math.random() * canvas.height : canvas.height + 20;
+    this.vx = (Math.random() - 0.5) * 0.6;
+    this.vy = -(Math.random() * 0.8 + 0.3);
+    this.alpha = Math.random() * 0.5 + 0.15;
+    this.size = Math.random() * 3 + 2;
+    this.stemLen = Math.random() * 14 + 8;
+    this.branches = Math.floor(Math.random() * 3) + 4;
+    this.branchLen = Math.random() * 5 + 4;
+    this.angle = Math.random() * Math.PI * 2;
+    this.rotSpeed = (Math.random() - 0.5) * 0.015;
+    this.wobble = Math.random() * Math.PI * 2;
+    this.wobbleSpeed = Math.random() * 0.03 + 0.01;
+  }
+
+  update() {
+    this.wobble += this.wobbleSpeed;
+    this.x += this.vx + Math.sin(this.wobble) * 0.3;
+    this.y += this.vy;
+    this.angle += this.rotSpeed;
+    if (this.y < -30) this.reset();
+  }
+
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = this.alpha;
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.angle);
+
+    // stem
+    ctx.strokeStyle = '#b8a9d9';
+    ctx.lineWidth = 0.8;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(0, -this.stemLen);
+    ctx.stroke();
+
+    // fluffy branches
+    for (let i = 0; i < this.branches; i++) {
+      const a = (i / this.branches) * Math.PI * 2;
+      const bx = Math.cos(a) * this.branchLen;
+      const by = -this.stemLen + Math.sin(a) * this.branchLen;
+      ctx.beginPath();
+      ctx.moveTo(0, -this.stemLen);
+      ctx.lineTo(bx, by);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(bx, by, 1.2, 0, Math.PI * 2);
+      ctx.fillStyle = '#e4dff5';
+      ctx.fill();
+    }
+
+    ctx.restore();
+  }
+}
+
+const seeds = Array.from({ length: 55 }, () => new Seed());
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  seeds.forEach(s => { s.update(); s.draw(); });
+  requestAnimationFrame(animate);
+}
+animate();
+
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      // animate skill bars
+      if (e.target.id === 'skills') {
+        setTimeout(() => {
+          document.querySelectorAll('.skill-bar-fill').forEach(bar => {
+            bar.style.width = bar.dataset.val + '%';
+          });
+        }, 200);
+      }
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.section').forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
